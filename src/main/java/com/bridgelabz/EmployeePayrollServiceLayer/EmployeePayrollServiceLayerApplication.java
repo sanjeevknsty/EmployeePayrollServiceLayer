@@ -1,0 +1,13 @@
+package com.bridgelabz.EmployeePayrollServiceLayer;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class EmployeePayrollServiceLayerApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(EmployeePayrollServiceLayerApplication.class, args);
+	}
+
+}
