@@ -13,16 +13,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bridgelabz.EmployeePayrollServiceLayer.dto.EmployeePayrollDto;
 import com.bridgelabz.EmployeePayrollServiceLayer.model.EmployeeModel;
+import com.bridgelabz.EmployeePayrollServiceLayer.model.EmployeePayrollData;
 import com.bridgelabz.EmployeePayrollServiceLayer.repository.EmployeeRepository;
+import com.bridgelabz.EmployeePayrollServiceLayer.service.serviceLayer;
 
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/payroll")
 public class EmployeePayrollController {
 	
+	
 	@Autowired
+	private serviceLayer empService;
 	private EmployeeRepository repo;
+	
 	
 	@GetMapping("/")
 	public String Hello() {
@@ -32,31 +38,32 @@ public class EmployeePayrollController {
 	
 	
 	@PostMapping("/post")
-	public EmployeeModel postEmployee(@RequestBody EmployeeModel emp) {
-		return repo.save(emp);
+	public EmployeePayrollData postEmployee(@RequestBody EmployeePayrollDto empDto) {
+		return empService.addEmployee(empDto);
 	}
 	
 	@GetMapping("/get")
-	public List<EmployeeModel> getEmployee(){
-		return repo.findAll();
+	public List<EmployeePayrollData> getEmployee(){
+		return empService.getAll();
 	}
 	
 	@GetMapping("/get/{id}")
-	public EmployeeModel getById(@PathVariable long id) {
-		return repo.findById(id).orElseThrow(()-> new RuntimeException("Employee With ID Not Found"));
+	public EmployeePayrollData getById(@PathVariable long id) {
+		return empService.getEmployeeById(id);
 	}
 	
 	@PutMapping("/update/{id}")
-	public EmployeeModel updateEmployee(@PathVariable long id,@RequestParam(name="name") String name) {
-		return repo.findById(id).map((i)->{
-    		i.setName(name);
-    		return repo.save(i);
-    	}).orElseThrow(() -> new RuntimeException("Employee not found"));
+	public EmployeePayrollData updateEmployee(@PathVariable long id,@RequestBody EmployeePayrollDto empDto) {
+		return empService.updateEmp(id, empDto);
+//				repo.findById(id).map((i)->{
+//    		i.setName(name);
+//    		return repo.save(i);
+//    	}).orElseThrow(() -> new RuntimeException("Employee not found"));
 	}
 	
 	@DeleteMapping("/delete/{id}")
 	public String deleteEmployee(@PathVariable long id) {
-		repo.deleteById(id);
+		empService.deleteEmployeeById(id);
 		return "Deleted row ID " + id;
 	}
 }
